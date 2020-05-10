@@ -2,7 +2,6 @@
 
 set -e
 
-
 LOCATION="$(dirname "$0")"
 
 # We need to cd into location to set the working directory for Java
@@ -21,6 +20,8 @@ echo "Running forge from $JAR"
 
 FREE_RAM=$(free|awk '/^Mem:/{print $4}')
 SERVER_RAM=$(( FREE_RAM * 80/100 ))
+
+./whitelist.sh
 
 # JVM args from https://aikar.co/2018/07/02/tuning-the-jvm-g1gc-garbage-collector-flags-for-minecraft/
 #   The JVM arg example is for paperclip (speed-optimised MC server), so some of the options probably don't work

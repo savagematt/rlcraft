@@ -7,8 +7,14 @@ FROM ubuntu:18.04
 RUN apt-get update && apt-get install -y \
     openjdk-8-jdk \
     unzip \
-    screen
+    screen \
+    curl
 
+# ...rsyslog does not seem to be included in the base image
+RUN apt-get update && apt-get install --reinstall -y \
+    rsyslog
+
+# ...and neither is cron
 RUN apt-get update && apt-get install -y \
     cron
 
@@ -25,7 +31,8 @@ RUN --mount=target=/media/Install,type=bind,source=install \
 RUN --mount=target=/media/Install,type=bind,source=install \
     /media/Install/customise-rlcraft.sh /usr/bin/rlcraft
 
-COPY install/server.properties /usr/bin/rlcraft
+RUN --mount=target=/media/Config,type=bind,source=Config \
+    ln -s /media/Config/server.properties /usr/bin/rlcraft/server.properties
 
 # Install Forge over unpacked RLCraft gubbins
 
@@ -33,12 +40,27 @@ RUN --mount=target=/media/Install,type=bind,source=install \
     --mount=target=/media/Provided,type=bind,source=provided \
     /media/Install/install-forge.sh /usr/bin/rlcraft
 
+# Configure whitelist cron job
 
-# Automatically accept EULA
+COPY install/whitelist.sh /usr/bin/rlcraft
+
+COPY install/whitelist.cron /etc/cron.d/whitelist.cron
+
+RUN chmod 0644 /etc/cron.d/whitelist.cron
+
+RUN crontab /etc/cron.d/whitelist.cron
+
+RUN --mount=target=/media/Config,type=bind,source=Config \
+    /usr/bin/rlcraft/whitelist.sh
+
+# Install run-forge.sh
 
 COPY install/run-forge.sh /usr/bin/rlcraft
 
+# Automatically accept EULA
+
 RUN --mount=target=/media/Install,type=bind,source=install \
+    --mount=target=/media/Config,type=bind,source=Config \
     /media/Install/fix-eula.sh /usr/bin/rlcraft
 
 # Configure backup cron job
@@ -63,4 +85,4 @@ COPY provided/mods/* /usr/bin/rlcraft/mods/
 
 EXPOSE 25565
 
-ENTRYPOINT ["/usr/bin/rlcraft/run-keep-alive.sh"]
+ENTRYPOINT ["screen", "-S", "rlcraft", "/usr/bin/rlcraft/run-keep-alive.sh"]
