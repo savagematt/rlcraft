@@ -1,0 +1,1 @@
+docker container ls -a --filter name=rlcraft | grep rlcraft | awk '//{print $1}'
