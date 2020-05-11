@@ -95,4 +95,4 @@ COPY provided/mods/* /usr/bin/rlcraft/mods/
 
 EXPOSE 25565
 
-ENTRYPOINT ["screen", "-S", "rlcraft", "/usr/bin/rlcraft/run-keep-alive.sh"]
+ENTRYPOINT screen -S rlcraft /usr/bin/rlcraft/run-keep-alive.sh
