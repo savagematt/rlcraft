@@ -2,7 +2,8 @@
 
 LOCATION="$(dirname "$0")"
 
-# Hack until https://stackoverflow.com/questions/61721828/etc-rc-not-running-on-ubuntu-18-04-in-docker-cannot-start-cron-on-boot
+# systemd does not exist in ubuntu docker images, so we need to start services ourselves
+# see https://stackoverflow.com/a/61726595/1892116
 service rsyslog start
 service cron start
 

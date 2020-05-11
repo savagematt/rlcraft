@@ -18,16 +18,10 @@ RUN apt-get update && apt-get install --reinstall -y \
 
 RUN sed -i '/imklog/s/^/#/' /etc/rsyslog.conf
 
-RUN update-rc.d rsyslog defaults
-RUN echo "service rsyslog start" >> /etc/rc.local
-
 # Install cron for backup and whitelist
 # ...which needs https://askubuntu.com/questions/9382/how-can-i-configure-a-service-to-run-at-startup
 RUN apt-get update && apt-get install -y \
     cron
-
-RUN update-rc.d cron defaults
-RUN echo "service cron start" >> /etc/rc.local
 
 # Unpack RLCraft zip
 
