@@ -1,6 +1,6 @@
 ./rm-container.sh
 
-mkdir -p Data
+mkdir -p data
 export DOCKER_BUILDKIT=1
 
 # -d, --detach                         Run container in background and print container ID
@@ -10,7 +10,7 @@ export DOCKER_BUILDKIT=1
 docker run \
   -ti \
   --publish 25565:25565 \
-  --mount target=/media/Data,type=bind,source="$(pwd)"/Data \
-  --mount target=/media/Config,type=bind,source="$(pwd)"/Config \
+  --mount target=/media/Data,type=bind,source="$(pwd)"/data \
+  --mount target=/media/Config,type=bind,source="$(pwd)"/config \
   --name rlcraft \
   rlcraft:latest

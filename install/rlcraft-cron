@@ -1,2 +1,2 @@
-*00 * * * * /usr/bin/rlcraft/backup-cron.sh
+00 * * * * /usr/bin/rlcraft/backup-cron.sh
 */t * * * * /usr/bin/rlcraft/whitelist.sh

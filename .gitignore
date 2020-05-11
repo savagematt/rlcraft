@@ -1,5 +1,5 @@
 .idea
 provided/*
 mods/*
-Data
-Config/whitelist.txt
+data
+config/whitelist.txt

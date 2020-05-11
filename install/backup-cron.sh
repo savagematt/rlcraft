@@ -1,0 +1,1 @@
+/usr/bin/rlcraft/backup.sh -c -i /usr/bin/rlcraft/world -o /media/Data -s rlcraft >> /usr/bin/rlcraft/backup.log

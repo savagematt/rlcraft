@@ -6,7 +6,7 @@ then
 else
   docker start \
     -ai \
-    --mount target=/media/Data,type=bind,source="$(pwd)"/Data \
-    --mount target=/media/Config,type=bind,source="$(pwd)"/Config \
+    --mount target=/media/Data,type=bind,source="$(pwd)"/data \
+    --mount target=/media/Config,type=bind,source="$(pwd)"/config \
     "$CONTAINER_ID"
 fi

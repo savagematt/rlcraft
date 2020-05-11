@@ -42,7 +42,7 @@ RUN --mount=target=/media/Install,type=bind,source=install \
 RUN --mount=target=/media/Install,type=bind,source=install \
     /media/Install/customise-rlcraft.sh /usr/bin/rlcraft
 
-RUN --mount=target=/media/Config,type=bind,source=Config \
+RUN --mount=target=/media/Config,type=bind,source=config \
     ln -s /media/Config/server.properties /usr/bin/rlcraft/server.properties
 
 # Install Forge over unpacked RLCraft gubbins
@@ -55,7 +55,7 @@ RUN --mount=target=/media/Install,type=bind,source=install \
 
 COPY install/whitelist.sh /usr/bin/rlcraft
 
-RUN --mount=target=/media/Config,type=bind,source=Config \
+RUN --mount=target=/media/Config,type=bind,source=config \
     /usr/bin/rlcraft/whitelist.sh
 
 # Install run-forge.sh
@@ -65,7 +65,7 @@ COPY install/run-forge.sh /usr/bin/rlcraft
 # Automatically accept EULA
 
 RUN --mount=target=/media/Install,type=bind,source=install \
-    --mount=target=/media/Config,type=bind,source=Config \
+    --mount=target=/media/Config,type=bind,source=config \
     /media/Install/fix-eula.sh /usr/bin/rlcraft
 
 # Configure backup cron job
@@ -84,7 +84,7 @@ COPY install/run-keep-alive.sh /usr/bin/rlcraft
 
 # Install Mods
 
-COPY provided/mods/* /usr/bin/rlcraft/mods/
+COPY provided /usr/bin/rlcraft/mods/
 
 # Expose minecraft port
 
