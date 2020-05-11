@@ -18,3 +18,13 @@ curl -f "https://docs.google.com/spreadsheets/d/$SHEET_ID/gviz/tq?tqx=out:csv&sh
 echo "[" > whitelist.json
 awk -F',' '{printf "{\"name\":%s, \"uuid\":%s},\r\n",$1,$2;}' whitelist.csv | sed '$ s/\(.*\),/\1/' >> whitelist.json
 echo "]" >> whitelist.json
+
+executeCommand () {
+  COMMAND=$1
+  screen -S rlcraft -p 0 -X stuff "$COMMAND$(printf \\r)"
+}
+
+if screen -ls | grep 'rlcraft'
+then
+  executeCommand "whitelist reload"
+fi

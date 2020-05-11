@@ -1,6 +1,6 @@
 ./rm-container.sh
 
-mkdir -p Backups
+mkdir -p Data
 export DOCKER_BUILDKIT=1
 
 # -d, --detach                         Run container in background and print container ID
@@ -10,7 +10,7 @@ export DOCKER_BUILDKIT=1
 docker run \
   -ti \
   --publish 25565:25565 \
-  --mount target=/media/Backups,type=bind,source="$(pwd)"/Backups \
+  --mount target=/media/Data,type=bind,source="$(pwd)"/Data \
   --mount target=/media/Config,type=bind,source="$(pwd)"/Config \
   --name rlcraft \
   rlcraft:latest

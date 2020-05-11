@@ -10,13 +10,24 @@ RUN apt-get update && apt-get install -y \
     screen \
     curl
 
-# ...rsyslog does not seem to be included in the base image
+# rsyslog is required to allow cron to output to /var/log/syslog
+# and it needs some fixing to work in docker
+# https://stackoverflow.com/questions/56609182/openthread-environment-docker-rsyslogd-imklog-cannot-open-kernel-log-proc-km
 RUN apt-get update && apt-get install --reinstall -y \
     rsyslog
 
-# ...and neither is cron
+RUN sed -i '/imklog/s/^/#/' /etc/rsyslog.conf
+
+RUN update-rc.d rsyslog defaults
+RUN echo "service rsyslog start" >> /etc/rc.local
+
+# Install cron for backup and whitelist
+# ...which needs https://askubuntu.com/questions/9382/how-can-i-configure-a-service-to-run-at-startup
 RUN apt-get update && apt-get install -y \
     cron
+
+RUN update-rc.d cron defaults
+RUN echo "service cron start" >> /etc/rc.local
 
 # Unpack RLCraft zip
 
@@ -44,12 +55,6 @@ RUN --mount=target=/media/Install,type=bind,source=install \
 
 COPY install/whitelist.sh /usr/bin/rlcraft
 
-COPY install/whitelist.cron /etc/cron.d/whitelist.cron
-
-RUN chmod 0644 /etc/cron.d/whitelist.cron
-
-RUN crontab /etc/cron.d/whitelist.cron
-
 RUN --mount=target=/media/Config,type=bind,source=Config \
     /usr/bin/rlcraft/whitelist.sh
 
@@ -66,12 +71,12 @@ RUN --mount=target=/media/Install,type=bind,source=install \
 # Configure backup cron job
 
 COPY install/backup.sh /usr/bin/rlcraft
+COPY install/backup-cron.sh /usr/bin/rlcraft
 
-COPY install/backup.cron /etc/cron.d/backup.cron
+# Configure backup cron job
 
-RUN chmod 0644 /etc/cron.d/backup.cron
-
-RUN crontab /etc/cron.d/backup.cron
+COPY install/rlcraft-cron /etc/cron.d/rlcraft-cron
+RUN crontab /etc/cron.d/rlcraft-cron
 
 # Configure upstart job
 
