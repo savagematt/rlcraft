@@ -3,7 +3,7 @@
 ## Features
 
 * Server starts on boot
-* Server is restarted on errors
+* Server is restarted if it crashes
 * Saves world state in volume mounted from host
 * Use any version of RLCraft (tested on `1.12.2-Beta-2.8.2`)
 * Add additional mod packs
@@ -47,7 +47,7 @@ https://files.minecraftforge.net/maven/net/minecraftforge/forge/index_1.12.2.htm
 
 ![screenshot](forge-screenshot.png)
 
-Copy the jar file into the `./Provided` directory of this repository
+Copy the jar file into the `./provided` directory of this repository
 
 No need to rename the file- the scripts will pick up `./provided/forge*.jar`
 
@@ -57,11 +57,17 @@ Any mods you place in `./provided/mods/` will be loaded on to the server.
 
 We like to add:
 
-https://www.curseforge.com/minecraft/mc-mods/gravestone-mod/files
+* Gravestone, which saves your possessions if you die. 
+  It's too easy to get randomly killed while carrying weapons it took you a day to make.
+  We could set `keepInventory=true` in `globalgamerules.cfg`, but that means dying costs
+  you nothing, which isn't in the spirit of rlcraft. https://www.curseforge.com/minecraft/mc-mods/gravestone-mod/files
+* We also like minimap, so you can see mobs nearby: https://www.curseforge.com/minecraft/mc-mods/xaeros-minimap
 
 > NB: Make sure you download the mod for the right minecraft version.
 
 > NB: Make sure you download the Forge mod (not bukkit, fabric, or whatever)
+
+> NB: Make sure you tell your players to install the mods client-side
 
 ### Create a whitelist Google Sheet of players allowed onto your server
 
@@ -118,3 +124,42 @@ image we just built.
 ```
 ./run-new.sh
 ```
+## Player guide
+
+* You can't just punch a tree in RLCraft. Read this https://rlcraft.fandom.com/wiki/Getting_Started
+* Almost everything can kill you instantly to begin with. Don't worry- things get less punishing as you level up. See https://rlcraft.fandom.com/wiki/Skills
+* When you die, you'll leave a gravestone with all your stuff in it. 
+  So no hurry to recover your possessions from the ground.
+* You will die all the time. Plan for it by keeping a chest of spare weapons and tools by your spawn point.
+* When you reach level 5, press `L` to select a specialisation (which cannot be undone). See https://rlcraft.fandom.com/wiki/Skills
+* Stay hydrated https://rlcraft.fandom.com/wiki/Thirst
+* Don't get too hot or cold https://rlcraft.fandom.com/wiki/Body_Temperature
+* Exploring for waypoints is a good idea- they're stones that allow teleportation https://rlcraft.fandom.com/wiki/Waystone
+* Here's the full list of mods https://rlcraft.fandom.com/wiki/Mods
+
+RLCraft shortcuts:
+
+```
+b   open bestiary
+p   configure custom particle effects (affects performance)
+f   hold item in other hand
+l   select specialisation (cannot be undone)
+v   browse all available items and their recipes
+```
+
+Xaero's world and minimap shortcuts:
+
+```
+h   show/hide minimap
+y   minimap settings (including switching off in-game waypoints showing deaths)
+z   zoom minimap
+u   share named waypoints with other players
+```
+
+More:
+
+* https://www.reddit.com/r/RLCraft/
+* https://rlcraft.fandom.com/wiki/Mods
+* https://rlcraft.fandom.com/wiki/Waystone
+* https://www.curseforge.com/minecraft/mc-mods/aquaculture
+* https://rlcraft.fandom.com/wiki/The_Lost_Cities_(Mod)
