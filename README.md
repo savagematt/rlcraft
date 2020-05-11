@@ -2,11 +2,14 @@
 
 ## Features
 
-* Server starts on boot and restarts if the process goes down
+* Server starts on boot
+* Server is restarted on errors
 * Saves world state in volume mounted from host
+* Use any version of RLCraft (tested on `1.12.2-Beta-2.8.2`)
+* Add additional mod packs
 * Backs up hourly to (another) volume mounted from host
 * Tidies up world backups
-
+* Player whitelist updated from Google sheet
 
 ## Building
 
@@ -23,7 +26,7 @@ Download the RLCraft **server pack** zip from here:
   
 https://www.curseforge.com/minecraft/modpacks/rlcraft/files
 
-We tested with version `RLCraft Server Pack 1.12.2 - Beta v2.8.2.zip`
+We tested with version `RLCraft+Server+Pack+1.12.2+-+Beta+v2.8.2.zip`
 
 Copy the zip file into the `./provided` directory of this repository
 (DO NOT UNZIP THE FILE)
@@ -44,11 +47,11 @@ https://files.minecraftforge.net/maven/net/minecraftforge/forge/index_1.12.2.htm
 
 ![screenshot](forge-screenshot.png)
 
-Copy the jar file into the `./provided` directory of this repository
+Copy the jar file into the `./Provided` directory of this repository
 
 No need to rename the file- the scripts will pick up `./provided/forge*.jar`
 
-#### Add mods
+#### Add extra mods
 
 Any mods you place in `./provided/mods/` will be loaded on to the server.
 
@@ -60,29 +63,46 @@ https://www.curseforge.com/minecraft/mc-mods/gravestone-mod/files
 
 > NB: Make sure you download the Forge mod (not bukkit, fabric, or whatever)
 
-### Create a whitelist file for players allowed onto your server
+### Create a whitelist Google Sheet of players allowed onto your server
 
-Ask your players for their minecraft usernames.
+Create a blank Google sheet.
 
-For each player, get their account id by entering their username here: https://mcuuid.net
+Rename `Sheet 1` worksheet to `players`
 
-Create a `./provided/whitelist.json` file with an entry for each player, like this:
+Add a list of players' usernames in column `A` and user ids in column `B`.
+
+You can get the id for a user name from https://mcuuid.net/
+
+Your sheet should look like this:
+
+![screenshot](player-sheet.png)
+
+Now click the "share" button. 
+
+Click inside the `Get link` section.
+
+Select `Anyone with the link` and `Viewer` to make sure the link is read only.
+
+> NB: if you do not select `Viewer`, anyone with the link can edit your whitelist
+
+![screenshot](share-sheet.png)
+
+Now copy the link and paste it into `./config/whitelist.txt`.
+
+Then deleted everything in `whitelist.txt` except for the link ID:
 
 ```
-[
-  {
-    "uuid": "4b6a5391-f902-4a58-b007-1a3b315e4d30",
-    "name": "playerone"
-  },
-  {
-    "uuid": "6680fedf-0ff5-40c2-a53e-a39db1d95885",
-    "name": "playertwo"
-  }
-]
+https://docs.google.com/spreadsheets/d/1a_6f6UrcM7zWxYR94n5tKrDOFhFcYaku0jAXjFzRyog/edit?usp=sharing
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 ```
 
-You might want to check your file is valid by pasting it here: https://jsonlint.com/
+So `whitelist.txt` now looks something like:
 
+```
+1a_6f6UrcM7zWxYR94n5tKrDOFhFcYaku0jAXjFzRyog
+```
+
+The server will read from the sheet and update your player whitelist every 5 minutes.
 
 ### Build the Docker image
 
