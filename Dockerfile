@@ -50,16 +50,9 @@ RUN --mount=target=/media/Install,type=bind,source=install \
     --mount=target=/media/Provided,type=bind,source=provided \
     /media/Install/install-forge.sh /usr/bin/rlcraft
 
-# Configure whitelist cron job
+# Copy over run scripts
 
-COPY install/whitelist.sh /usr/bin/rlcraft
-
-RUN --mount=target=/media/Config,type=bind,source=config \
-    /usr/bin/rlcraft/whitelist.sh
-
-# Install run-forge.sh
-
-COPY install/run-forge.sh /usr/bin/rlcraft
+COPY run/* /usr/bin/rlcraft
 
 # Automatically accept EULA
 
@@ -67,26 +60,20 @@ RUN --mount=target=/media/Install,type=bind,source=install \
     --mount=target=/media/Config,type=bind,source=config \
     /media/Install/fix-eula.sh /usr/bin/rlcraft
 
-# Configure backup cron job
-
-COPY install/backup.sh /usr/bin/rlcraft
-COPY install/backup-cron.sh /usr/bin/rlcraft
-
-# Configure backup cron job
+# Configure cron jobs
 
 COPY install/rlcraft-cron /etc/cron.d/rlcraft-cron
 RUN crontab /etc/cron.d/rlcraft-cron
 
-# Configure upstart job
-
-COPY install/run-keep-alive.sh /usr/bin/rlcraft
-
 # Install Mods
 
 COPY provided/mods/* /usr/bin/rlcraft/mods/
+COPY provided/resourcepacks/* /usr/bin/rlcraft/resourcepacks/
 
 # Expose minecraft port
 
 EXPOSE 25565
 
-ENTRYPOINT screen -S rlcraft /usr/bin/rlcraft/run-keep-alive.sh
+# backup.sh requires a screen session named rlcraft
+
+CMD screen -S rlcraft /usr/bin/rlcraft/run-keep-alive.sh
