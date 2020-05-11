@@ -84,7 +84,7 @@ COPY install/run-keep-alive.sh /usr/bin/rlcraft
 
 # Install Mods
 
-COPY provided /usr/bin/rlcraft/mods/
+COPY provided/mods/* /usr/bin/rlcraft/mods/
 
 # Expose minecraft port
 
