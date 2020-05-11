@@ -37,6 +37,11 @@ RUN --mount=target=/media/Install,type=bind,source=install \
     --mount=target=/media/Provided,type=bind,source=provided \
     /media/Install/uncompress-rlcraft.sh /usr/bin/rlcraft
 
+# Save world state to host filesystem
+
+RUN --mount=target=/media/Data,type=bind,source=data \
+    ln -s /media/Data/world /usr/bin/rlcraft/world
+
 # Make rlcraft game rules more fun (players spawn within walking distance, no pvp, don't lose their inventory, etc.)
 
 RUN --mount=target=/media/Install,type=bind,source=install \
