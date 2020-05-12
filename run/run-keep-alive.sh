@@ -7,7 +7,7 @@ LOCATION="$(dirname "$0")"
 service rsyslog start
 service cron start
 
-"$LOCATION"/whitelist-ips.sh
+"$LOCATION"/whitelist.sh
 
 # We need to cd into location to set the working directory because not everything in Java stdlib respects -Duser.dir
 cd "$LOCATION" || exit 1
