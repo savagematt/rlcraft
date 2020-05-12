@@ -21,7 +21,7 @@ echo "Running forge from $JAR"
 FREE_RAM=$(free|awk '/^Mem:/{print $4}')
 SERVER_RAM=$(( FREE_RAM * 80/100 ))
 
-./whitelist.sh
+./refresh-player-whitelist.sh
 
 # JVM args from https://aikar.co/2018/07/02/tuning-the-jvm-g1gc-garbage-collector-flags-for-minecraft/
 #   The JVM arg example is for paperclip (speed-optimised MC server), so some of the options probably don't work

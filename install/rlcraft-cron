@@ -1,2 +1,2 @@
 00 * * * * /usr/bin/rlcraft/backup-cron.sh
-*/5 * * * * /usr/bin/rlcraft/whitelist.sh
+*/5 * * * * /usr/bin/rlcraft/refresh-player-whitelist.sh
