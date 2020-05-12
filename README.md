@@ -45,7 +45,7 @@ We've tested with `forge-1.12.2-14.23.5.2854-installer.jar`, which can be found 
 
 https://files.minecraftforge.net/maven/net/minecraftforge/forge/index_1.12.2.html
 
-![screenshot](forge-screenshot.png)
+![screenshot](docs/forge-screenshot.png)
 
 Copy the jar file into the `./provided` directory of this repository
 
@@ -81,7 +81,7 @@ You can get the id for a user name from https://mcuuid.net/
 
 Your sheet should look like this:
 
-![screenshot](player-sheet.png)
+![screenshot](docs/player-sheet.png)
 
 Now click the "share" button. 
 
@@ -91,7 +91,7 @@ Select `Anyone with the link` and `Viewer` to make sure the link is read only.
 
 > NB: if you do not select `Viewer`, anyone with the link can edit your whitelist
 
-![screenshot](share-sheet.png)
+![screenshot](docs/share-sheet.png)
 
 Now copy the link and paste it into `./config/whitelist.txt`.
 
