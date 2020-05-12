@@ -11,6 +11,5 @@ docker run \
   -ti \
   --publish 25565:25565 \
   --mount target=/media/Data,type=bind,source="$(pwd)"/data \
-  --mount target=/media/Config,type=bind,source="$(pwd)"/config \
   --name rlcraft \
   rlcraft:latest

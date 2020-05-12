@@ -5,11 +5,11 @@ set -e
 LOCATION="$(dirname "$0")"
 
 cd "$LOCATION" || exit 1
-SHEET_ID="$(cat /media/Config/whitelist.txt)"
+SHEET_ID="$(cat /media/Data/whitelist.txt)"
 
 if [ -z "$SHEET_ID" ]
 then
-  echo "No sheet id found in /media/Config/whitelist.txt"
+  echo "No sheet id found in /media/Data/whitelist.txt"
   exit 1
 fi
 

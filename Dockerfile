@@ -36,14 +36,6 @@ RUN --mount=target=/media/Install,type=bind,source=install \
 RUN --mount=target=/media/Data,type=bind,source=data \
     ln -s /media/Data/world /usr/bin/rlcraft/world
 
-# Make rlcraft game rules more fun (players spawn within walking distance, no pvp, don't lose their inventory, etc.)
-
-RUN --mount=target=/media/Install,type=bind,source=install \
-    /media/Install/customise-rlcraft.sh /usr/bin/rlcraft
-
-RUN --mount=target=/media/Config,type=bind,source=config \
-    ln -s /media/Config/server.properties /usr/bin/rlcraft/server.properties
-
 # Install Forge over unpacked RLCraft gubbins
 
 RUN --mount=target=/media/Install,type=bind,source=install \
@@ -57,8 +49,15 @@ COPY run/* /usr/bin/rlcraft
 # Automatically accept EULA
 
 RUN --mount=target=/media/Install,type=bind,source=install \
-    --mount=target=/media/Config,type=bind,source=config \
+    --mount=target=/media/Data,type=bind,source=data \
     /media/Install/fix-eula.sh /usr/bin/rlcraft
+
+# Make rlcraft game rules more fun (players spawn within walking distance, no pvp, don't lose their inventory, etc.)
+
+RUN --mount=target=/media/Install,type=bind,source=install \
+    /media/Install/customise-rlcraft.sh /usr/bin/rlcraft
+
+COPY install/server.properties /usr/bin/rlcraft/server.properties
 
 # Configure cron jobs
 
