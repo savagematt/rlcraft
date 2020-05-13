@@ -73,6 +73,10 @@ COPY provided/resourcepacks/* /usr/bin/rlcraft/resourcepacks/
 
 EXPOSE 25565
 
+# Expose DynMap port
+
+EXPOSE 8123
+
 # backup.sh requires a screen session named rlcraft
 
 CMD screen -S rlcraft /usr/bin/rlcraft/run-keep-alive.sh

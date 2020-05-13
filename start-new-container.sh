@@ -10,6 +10,7 @@ export DOCKER_BUILDKIT=1
 docker run \
   -ti \
   --publish 25565:25565 \
+  --publish 8123:8123 \
   --mount target=/media/Data,type=bind,source="$(pwd)"/data \
   --name rlcraft \
   rlcraft:latest
