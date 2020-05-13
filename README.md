@@ -1,24 +1,31 @@
-# Simple RLCraft server docker image
+# Dockerfile for a family-and-friend RLCraft server
+
+https://rlcraft.fandom.com/wiki/RLCraft_Wiki
 
 ## Features
 
-* Server starts on boot
+* Runs server in a screen session
 * Server is restarted if it crashes
-* Saves world state in volume mounted from host
-* Use any version of RLCraft (tested on `1.12.2-Beta-2.8.2`)
-* Add additional mod packs
-* Backs up hourly to (another) volume mounted from host
-* Tidies up world backups
-* Player whitelist updated from Google sheet
+* Takes rolling backups of world state, one per hour, thinned out to one per day as they age
+* Can safely destroy and rebuild the container without losing state
+  * Stores world state in volume mounted from host
+  * Backs up hourly in volume mounted from host
+* Can theoretically use any version of RLCraft (tested on `1.12.2-Beta-2.8.2`)
+* Supports adding additional mod packs when building your image
+* Supports adding additional resource packs when building your image
+* Player whitelist maintained and automatically reloaded from a Google sheet
+* Span radius of 5,000 blocks instead of the RLCraft default of 10,000, so it's easier
+  to reach your friends in early game
+* No PVP- the challenge is supposed to be friends and family vs. RLCraft
+* Opens port 8123, for DynMap
 
 ## Building
 
 ### Provide RLCraft, Forge installer, mod packs
 
-Our `Dockerfile` expects to find some resources in the `./provided` directory.
+You are required to provide the software to be installed in the image- it's not stored in this repository.
 
-These aren't checked in to this repository, to keep the size down, and to allow
-you to build an image with the newest or most stable versions of RLCraft and Forge.
+Our `Dockerfile` expects to find some resources in a `./provided` directory that you create and populate.
 
 #### Provide an RLCraft server pack
 
@@ -28,14 +35,14 @@ https://www.curseforge.com/minecraft/modpacks/rlcraft/files
 
 We tested with version `RLCraft+Server+Pack+1.12.2+-+Beta+v2.8.2.zip`
 
-Copy the zip file into the `./provided` directory of this repository
+Copy the zip file into the `./provided` directory next to the `Dockerfile`
 (DO NOT UNZIP THE FILE)
 
-No need to rename the file- the scripts will pick up `./provided/RLCraft*.zip`
+No need to rename the file, although please don't add more than one. The scripts will pick up `./provided/RLCraft*.zip`.
 
 #### Provide a Forge installer for Linux
 
-You need to provide an installer jar for Forge from https://files.minecraftforge.net
+You need to provide a **Linux** (see screenshot below) installer for Forge from https://files.minecraftforge.net
 
 > NB The Forge installer will need to be compatible with your RLCraft server pack.
 >
@@ -49,27 +56,29 @@ https://files.minecraftforge.net/maven/net/minecraftforge/forge/index_1.12.2.htm
 
 Copy the jar file into the `./provided` directory of this repository
 
-No need to rename the file- the scripts will pick up `./provided/forge*.jar`
+No need to rename the file, although please don't add more than one. The scripts will pick up `./provided/forge*.jar`
 
-#### Add extra mods
+#### Add extra mods and resource packs
 
-Any mods you place in `./provided/mods/` will be loaded on to the server.
+Any mods you place in `./provided/mods/` and `./provided/resourcepacks/` will be loaded on to the server.
 
 We like to add:
 
-* Gravestone, which saves your possessions if you die. 
-  It's too easy to get randomly killed while carrying weapons it took you a day to make.
-  We could set `keepInventory=true` in `globalgamerules.cfg`, but that means dying costs
-  you nothing, which isn't in the spirit of rlcraft. https://www.curseforge.com/minecraft/mc-mods/gravestone-mod/files
-* We also like minimap, so you can see mobs nearby: https://www.curseforge.com/minecraft/mc-mods/xaeros-minimap
+* Gravestone, which saves your possessions if you die. It's too easy to get randomly killed in RLCraft while carrying 
+  weapons it took you a day to make. We could set `keepInventory=true` in `globalgamerules.cfg`, but that means dying 
+  costs you nothing at all, which isn't in the spirit of rlcraft. 
+  https://www.curseforge.com/minecraft/mc-mods/gravestone-mod/files
+* Xaero's Minimap, so you can see mobs nearby: https://www.curseforge.com/minecraft/mc-mods/xaeros-minimap
+* DynMap, which serves a map of the world on port 8123, which is opened in the `Dockerfile` 
+  https://www.curseforge.com/minecraft/mc-mods/dynmapforge
 
 > NB: Make sure you download the mod for the right minecraft version.
 
-> NB: Make sure you download the Forge mod (not bukkit, fabric, or whatever)
+> NB: Make sure you download the **Forge** mod (not Bukkit, Fabric, or whatever)
 
-> NB: Make sure you tell your players to install the mods client-side
+> NB: Make sure you tell your players to install the mods you use client-side
 
-### Create a whitelist Google Sheet of players allowed onto your server
+#### Create a whitelist Google Sheet of players allowed onto your server
 
 Create a blank Google sheet.
 
@@ -93,9 +102,11 @@ Select `Anyone with the link` and `Viewer` to make sure the link is read only.
 
 ![screenshot](docs/share-sheet.png)
 
-Now copy the link and paste it into `./config/whitelist.txt`.
+Now copy the link and paste it into `./data/whitelist.txt`.
 
-Then deleted everything in `whitelist.txt` except for the link ID:
+> NB: whitelist.txt goes in the `data` directory, not `provided`
+
+Then delete everything in `whitelist.txt` except for the link ID:
 
 ```
 https://docs.google.com/spreadsheets/d/1a_6f6UrcM7zWxYR94n5tKrDOFhFcYaku0jAXjFzRyog/edit?usp=sharing
@@ -116,17 +127,30 @@ The server will read from the sheet and update your player whitelist every 5 min
 ./build.sh
 ```
 
-### Test the image
+### Running or testing the image
 
-This command will **delete any existing `rlcraft` containers** and start a new one based on the 
+**Delete any existing `rlcraft` containers** and start a new one based on the 
 image we just built.
 
 ```
-./run-new.sh
+./start-new-container.sh
 ```
+
+Start the existing container called `rlcraft`, or create a new one if none exists:
+
+```
+./start-container.sh
+```
+
+Delete the container called `rlcraft`:
+
+```
+./rm-container.sh
+```
+
 ## Player guide
 
-* You can't just punch a tree in RLCraft. Read this https://rlcraft.fandom.com/wiki/Getting_Started
+* You can't cut down a tree with your fist in RLCraft. Read this https://rlcraft.fandom.com/wiki/Getting_Started
 * Almost everything can kill you instantly to begin with. Don't worry- things get less punishing as you level up. See https://rlcraft.fandom.com/wiki/Skills
 * When you die, you'll leave a gravestone with all your stuff in it. 
   So no hurry to recover your possessions from the ground.
